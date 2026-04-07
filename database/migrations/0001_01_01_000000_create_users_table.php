@@ -20,11 +20,6 @@ return new class extends Migration
             $table->integer('login_attempts')->default(0);
             $table->timestamp('locked_until')->nullable();
             $table->rememberToken();
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

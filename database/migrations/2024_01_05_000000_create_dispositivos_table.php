@@ -16,11 +16,6 @@ return new class extends Migration
             $table->boolean('activo')->default(true);
             $table->boolean('deleted')->default(false);
             $table->timestamp('ultimo_ping_at')->nullable();
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 

@@ -21,10 +21,6 @@ return new class extends Migration
             $table->string('dispositivo_info')->nullable();
             $table->text('observaciones')->nullable();
             $table->boolean('deleted')->default(false);
-            $table->uuid('created_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 

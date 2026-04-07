@@ -17,11 +17,6 @@ return new class extends Migration
             $table->enum('estado', ['activo', 'vencido', 'cancelado'])->default('activo');
             $table->string('comprobante_path')->nullable();
             $table->boolean('deleted')->default(false);
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 

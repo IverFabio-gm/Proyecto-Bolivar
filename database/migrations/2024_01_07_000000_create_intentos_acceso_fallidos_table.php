@@ -16,9 +16,6 @@ return new class extends Migration
             $table->string('ip_dispositivo')->nullable();
             $table->string('motivo_rechazo')->nullable();
             $table->boolean('deleted')->default(false);
-            $table->uuid('deleted_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 
