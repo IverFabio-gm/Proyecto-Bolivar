@@ -6,31 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use App\Traits\Auditable;
+
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, Auditable;
+    use HasFactory, Notifiable, Auditable, HasApiTokens;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected $keyType = 'string';
+    protected $fillable  = ['name', 'email', 'password'];
+    protected $hidden    = ['password', 'remember_token'];
+    protected $keyType   = 'string';
     public $incrementing = false;
-    public $timestamps = false;
+    public $timestamps   = false;
 
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
