@@ -13,17 +13,27 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, Auditable, HasApiTokens;
 
-    protected $fillable  = ['name', 'email', 'password'];
-    protected $hidden    = ['password', 'remember_token'];
-    protected $keyType   = 'string';
+    protected $fillable = [
+        'role_id',
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $keyType = 'string';
     public $incrementing = false;
-    public $timestamps   = false;
+    public $timestamps = false;
 
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
@@ -34,5 +44,10 @@ class User extends Authenticatable
                 $model->id = Str::uuid();
             }
         });
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 }

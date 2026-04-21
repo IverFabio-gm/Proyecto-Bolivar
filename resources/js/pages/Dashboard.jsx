@@ -1,160 +1,281 @@
-import { useState, useEffect } from 'react';
-import { Head, usePage, router } from '@inertiajs/react';
-import axios from 'axios';
+import { usePage } from '@inertiajs/react';
+import AppSidebarLayout from '@/Layouts/AppSidebarLayout';
 
 export default function Dashboard() {
     const { auth } = usePage().props;
-    const [logs, setLogs]         = useState([]);
-    const [cargando, setCargando] = useState(true);
-    const [tema, setTema]         = useState(() => localStorage.getItem('tema') || 'dark');
-    const [logoErr, setLogoErr]   = useState(false);
+    const role = auth?.user?.role?.nombre ?? 'Administrador';
 
-    useEffect(() => {
-        document.documentElement.setAttribute('data-theme', tema);
-    }, [tema]);
-
-    useEffect(() => {
-        axios.get('/api/audit-logs', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        })
-        .then(res => setLogs(res.data))
-        .catch(() => {})
-        .finally(() => setCargando(false));
-    }, []);
-
-    const toggleTema = () => {
-        const nuevo = tema === 'dark' ? 'light' : 'dark';
-        setTema(nuevo);
-        localStorage.setItem('tema', nuevo);
-    };
-
-    const cerrarSesion = () => {
-        router.post(route('logout'));
-    };
-
-    const totalCreate = logs.filter(l => l.accion === 'create').length;
-    const totalUpdate = logs.filter(l => l.accion === 'update').length;
-    const totalDelete = logs.filter(l => l.accion === 'delete').length;
-
-    return (
+    const renderAdmin = () => (
         <>
-            <Head title="Dashboard — Club Bolívar" />
+            <div className="dashboard-grid">
+                <div className="dashboard-card">
+                    <h1 className="dashboard-hero-title">
+                        Panel de
+                        <span>Administración General</span>
+                    </h1>
 
-            <div className="dashboard-root">
-                <nav className="navbar navbar-dashboard">
-                    <div className="navbar-brand">
-                        {logoErr ? (
-                            <div className="navbar-logo-fallback">B</div>
-                        ) : (
-                            <img
-                                className="navbar-logo"
-                                src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Club_Bol%C3%ADvar_logo.svg"
-                                alt="Club Bolívar"
-                                onError={() => setLogoErr(true)}
-                            />
-                        )}
-                        <div className="navbar-brand-texto">
-                            <span className="navbar-brand-titulo">Club Bolívar</span>
-                            <span className="navbar-brand-sub">Panel de Control</span>
+                    <p className="dashboard-hero-text">
+                        Desde aquí el administrador podrá gestionar socios, membresías, accesos,
+                        reportes, bloqueos y configuración general del sistema. También será el
+                        punto central para alertas y monitoreo de seguridad.
+                    </p>
+
+                    <div className="dashboard-stats">
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Socios</div>
+                            <div className="dashboard-stat-label">Gestión completa</div>
+                        </div>
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Accesos</div>
+                            <div className="dashboard-stat-label">Control y seguimiento</div>
+                        </div>
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Reportes</div>
+                            <div className="dashboard-stat-label">Visión del sistema</div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="navbar-acciones">
-                        <span className="navbar-usuario">{auth.user.name}</span>
-                        <button className="btn-tema" onClick={toggleTema}>
-                            {tema === 'dark' ? '☀️' : '🌙'}
-                        </button>
-                        <button className="btn btn-peligro btn-sm" onClick={cerrarSesion}>
-                            Cerrar sesión
-                        </button>
-                    </div>
-                </nav>
-
-                <div className="dashboard-main">
-                    <div className="dashboard-header">
-                        <div>
-                            <div className="dashboard-titulo">Registro de Auditoría</div>
-                            <div className="dashboard-subtitulo">Últimas 50 acciones registradas en el sistema</div>
+                <div className="dashboard-actions">
+                    <div className="dashboard-card dashboard-action">
+                        <div className="dashboard-action-title">Lo que hará este rol</div>
+                        <div className="dashboard-action-text">
+                            Ver todos los módulos, aprobar procesos, supervisar operaciones y administrar
+                            la configuración general.
                         </div>
                     </div>
-
-                    <div className="stats-grid">
-                        <div className="stat-card">
-                            <div className="stat-icono stat-icono-verde">✅</div>
-                            <div>
-                                <div className="stat-valor">{totalCreate}</div>
-                                <div className="stat-label">Creados</div>
-                            </div>
+                    <div className="dashboard-card dashboard-action">
+                        <div className="dashboard-action-title">Próximos módulos</div>
+                        <div className="dashboard-action-text">
+                            Registro de socios, gestión de membresías, reportes, bloqueos y seguridad.
                         </div>
-                        <div className="stat-card">
-                            <div className="stat-icono stat-icono-cyan">✏️</div>
-                            <div>
-                                <div className="stat-valor">{totalUpdate}</div>
-                                <div className="stat-label">Actualizados</div>
-                            </div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-icono stat-icono-rojo">🗑️</div>
-                            <div>
-                                <div className="stat-valor">{totalDelete}</div>
-                                <div className="stat-label">Eliminados</div>
-                            </div>
-                        </div>
-                        <div className="stat-card">
-                            <div className="stat-icono stat-icono-gold">📋</div>
-                            <div>
-                                <div className="stat-valor">{logs.length}</div>
-                                <div className="stat-label">Total eventos</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="card">
-                        <div className="card-header">
-                            <div className="card-titulo">Eventos del sistema</div>
-                            <div className="card-subtitulo">Auditoría automática de todas las operaciones</div>
-                        </div>
-                        {cargando ? (
-                            <div className="dashboard-cargando">Cargando registros</div>
-                        ) : logs.length === 0 ? (
-                            <div className="tabla-vacia">No hay registros aún.</div>
-                        ) : (
-                            <div className="tabla-contenedor">
-                                <table className="tabla">
-                                    <thead>
-                                        <tr>
-                                            <th>Acción</th>
-                                            <th>Tabla</th>
-                                            <th>Fecha y hora</th>
-                                            <th>IP</th>
-                                            <th>Navegador</th>
-                                            <th>Sistema operativo</th>
-                                            <th>Usuario</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {logs.map(log => (
-                                            <tr key={log.id}>
-                                                <td>
-                                                    <span className={`badge badge-${log.accion}`}>
-                                                        {log.accion}
-                                                    </span>
-                                                </td>
-                                                <td>{log.modelo_afectado}</td>
-                                                <td className="td-muted">{log.fecha_hora ?? '—'}</td>
-                                                <td className="td-muted">{log.ip_address}</td>
-                                                <td>{log.navegador ?? '—'}</td>
-                                                <td>{log.sistema_operativo ?? '—'}</td>
-                                                <td className="td-muted">{log.user_id ?? '—'}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
         </>
+    );
+
+    const renderOperador = () => (
+        <>
+            <div className="dashboard-grid">
+                <div className="dashboard-card">
+                    <h1 className="dashboard-hero-title">
+                        Panel de
+                        <span>Operación de Accesos</span>
+                    </h1>
+
+                    <p className="dashboard-hero-text">
+                        Este panel está orientado al trabajo en los puntos de control del estadio.
+                        Aquí el operador validará ingresos mediante reconocimiento facial o código QR,
+                        revisará incidencias y realizará consultas rápidas del socio.
+                    </p>
+
+                    <div className="dashboard-stats">
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Ingreso</div>
+                            <div className="dashboard-stat-label">Validación rápida</div>
+                        </div>
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">QR</div>
+                            <div className="dashboard-stat-label">Control operativo</div>
+                        </div>
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Soporte</div>
+                            <div className="dashboard-stat-label">Incidencias del día</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="dashboard-actions">
+                    <div className="dashboard-card dashboard-action">
+                        <div className="dashboard-action-title">Lo que hará este rol</div>
+                        <div className="dashboard-action-text">
+                            Validar accesos, registrar entradas y salidas, y atender incidencias en sitio.
+                        </div>
+                    </div>
+                    <div className="dashboard-card dashboard-action">
+                        <div className="dashboard-action-title">Enfoque del operador</div>
+                        <div className="dashboard-action-text">
+                            Interfaz simple, rápida y enfocada en la operación del estadio.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+
+    const renderSocio = () => (
+        <>
+            <div className="dashboard-grid">
+                <div className="dashboard-card">
+                    <h1 className="dashboard-hero-title">
+                        Bienvenido a
+                        <span>Tu Panel de Socio</span>
+                    </h1>
+
+                    <p className="dashboard-hero-text">
+                        Desde aquí el socio podrá revisar su membresía, descargar su carnet digital,
+                        actualizar sus datos personales y consultar su historial de accesos.
+                    </p>
+
+                    <div className="dashboard-stats">
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Carnet</div>
+                            <div className="dashboard-stat-label">Disponible en línea</div>
+                        </div>
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Perfil</div>
+                            <div className="dashboard-stat-label">Datos actualizables</div>
+                        </div>
+                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-num">Historial</div>
+                            <div className="dashboard-stat-label">Consulta personal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="dashboard-actions">
+                    <div className="dashboard-card dashboard-action">
+                        <div className="dashboard-action-title">Lo que hará este rol</div>
+                        <div className="dashboard-action-text">
+                            Gestionar su propia información, ver su membresía y descargar su carnet.
+                        </div>
+                    </div>
+                    <div className="dashboard-card dashboard-action">
+                        <div className="dashboard-action-title">Experiencia del socio</div>
+                        <div className="dashboard-action-text">
+                            Un panel simple, claro y centrado solo en lo que realmente necesita.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+
+    return (
+        <AppSidebarLayout title="Dashboard">
+            <style>{`
+                .dashboard-grid {
+                    display: grid;
+                    grid-template-columns: 1.2fr .8fr;
+                    gap: 1.5rem;
+                }
+
+                .dashboard-card {
+                    border: 1px solid rgba(255,255,255,.07);
+                    background: linear-gradient(180deg, rgba(10,20,35,.82), rgba(5,11,22,.92));
+                    backdrop-filter: blur(18px);
+                    border-radius: 28px;
+                    box-shadow:
+                        0 20px 60px rgba(0,0,0,.25),
+                        inset 0 1px 0 rgba(255,255,255,.04);
+                    padding: 1.6rem;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .dashboard-card::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(135deg, rgba(28,224,235,.05), transparent 45%);
+                    pointer-events: none;
+                }
+
+                .dashboard-card > * {
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .dashboard-hero-title {
+                    margin: 0;
+                    font-size: clamp(1.8rem, 4vw, 2.7rem);
+                    font-weight: 800;
+                    line-height: 1.1;
+                    color: #fff;
+                }
+
+                .dashboard-hero-title span {
+                    display: block;
+                    background: linear-gradient(135deg, #1CE0EB, #9bf8ff, #15A3AB);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .dashboard-hero-text {
+                    margin-top: 1rem;
+                    max-width: 700px;
+                    color: rgba(224,247,248,.58);
+                    line-height: 1.8;
+                    font-size: .98rem;
+                }
+
+                .dashboard-stats {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 1rem;
+                    margin-top: 1.5rem;
+                }
+
+                .dashboard-stat {
+                    padding: 1rem;
+                    border-radius: 18px;
+                    background: rgba(255,255,255,.03);
+                    border: 1px solid rgba(255,255,255,.06);
+                }
+
+                .dashboard-stat-num {
+                    color: #1CE0EB;
+                    font-size: 1.35rem;
+                    font-weight: 800;
+                    line-height: 1.1;
+                }
+
+                .dashboard-stat-label {
+                    margin-top: .4rem;
+                    color: rgba(224,247,248,.45);
+                    font-size: .8rem;
+                    text-transform: uppercase;
+                    letter-spacing: .08em;
+                }
+
+                .dashboard-actions {
+                    display: grid;
+                    gap: 1rem;
+                }
+
+                .dashboard-action-title {
+                    color: #fff;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    margin-bottom: .55rem;
+                }
+
+                .dashboard-action-text {
+                    color: rgba(224,247,248,.52);
+                    line-height: 1.7;
+                    font-size: .9rem;
+                }
+
+                @media (max-width: 1024px) {
+                    .dashboard-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .dashboard-stats {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
+
+            {role === 'Operador'
+                ? renderOperador()
+                : role === 'Socio'
+                ? renderSocio()
+                : renderAdmin()}
+        </AppSidebarLayout>
     );
 }

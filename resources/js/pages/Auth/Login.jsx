@@ -669,7 +669,7 @@ export default function Login({ status, canResetPassword }) {
                                     <div className="input-shell">
                                         <input
                                             type="email"
-                                            placeholder="tucorreo@ejemplo.com"
+                                            placeholder="email@gmail.com"
                                             value={data.email}
                                             onChange={(e) => setData('email', e.target.value)}
                                             required
