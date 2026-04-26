@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-
+use App\Http\Controllers\Api\SocioRegistrationController;
 // Ruta de login
 Route::post('/login', function (Request $request) {
     $user = User::where('email', $request->email)->first();
@@ -45,5 +45,5 @@ Route::middleware('auth:sanctum')->group(function () {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Sesión cerrada']);
     });
-
+    Route::post('/socios/registro', [SocioRegistrationController::class, 'store']);
 });
