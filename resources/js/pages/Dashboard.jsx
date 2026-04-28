@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import AppSidebarLayout from '@/Layouts/AppSidebarLayout';
 
 export default function Dashboard() {
@@ -21,14 +21,22 @@ export default function Dashboard() {
                     </p>
 
                     <div className="dashboard-stats">
-                        <div className="dashboard-stat">
+                        <Link
+                            href={route('socios.create')}
+                            className="dashboard-stat dashboard-stat-link"
+                        >
                             <div className="dashboard-stat-num">Socios</div>
                             <div className="dashboard-stat-label">Gestión completa</div>
-                        </div>
-                        <div className="dashboard-stat">
+                            <div className="dashboard-stat-cta">Registrar nuevo socio →</div>
+                        </Link>
+                        <Link
+                            href={route('reconocimiento.index')}
+                            className="dashboard-stat dashboard-stat-link"
+                        >
                             <div className="dashboard-stat-num">Accesos</div>
                             <div className="dashboard-stat-label">Control y seguimiento</div>
-                        </div>
+                            <div className="dashboard-stat-cta">Reconocimiento facial →</div>
+                        </Link>
                         <div className="dashboard-stat">
                             <div className="dashboard-stat-num">Reportes</div>
                             <div className="dashboard-stat-label">Visión del sistema</div>
@@ -223,6 +231,27 @@ export default function Dashboard() {
                     border-radius: 18px;
                     background: rgba(255,255,255,.03);
                     border: 1px solid rgba(255,255,255,.06);
+                }
+
+                .dashboard-stat-link {
+                    display: block;
+                    text-decoration: none;
+                    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+                    cursor: pointer;
+                }
+
+                .dashboard-stat-link:hover {
+                    transform: translateY(-2px);
+                    background: rgba(28,224,235,.06);
+                    border-color: rgba(28,224,235,.18);
+                }
+
+                .dashboard-stat-cta {
+                    margin-top: .65rem;
+                    color: rgba(224,247,248,.58);
+                    font-size: .82rem;
+                    font-weight: 650;
+                    letter-spacing: .02em;
                 }
 
                 .dashboard-stat-num {

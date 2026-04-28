@@ -85,10 +85,23 @@ export default function AppSidebarLayout({ title = 'Panel', children }) {
                         </svg>
                     ),
                 },
+                // --- Reconociento ---
+                {
+                    label: 'Reconocimiento Facial',
+                    href: route('reconocimiento.index'), // Asegúrate que este nombre de ruta coincida con tu Web.php
+                    active: isActive('reconocimiento.index'),
+                    svg: (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            <path d="M16 8a4 4 0 1 0-8 0v0" />
+                            <path d="M8 12v0a4 4 0 0 0 8 0v0" />
+                        </svg>
+                    ),
+                },
                 {
                     label: 'Socios',
-                    href: '#',
-                    active: false,
+                    href: route('socios.index'),
+                    active: isActive('socios.index'),
                     svg: (
                         <svg viewBox="0 0 24 24">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
@@ -210,6 +223,17 @@ export default function AppSidebarLayout({ title = 'Panel', children }) {
                         <svg viewBox="0 0 24 24">
                             <circle cx="11" cy="11" r="7" />
                             <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                    ),
+                },
+                {
+                    label: 'Reconocimiento Facial',
+                    href: route('reconocimiento.index'),
+                    active: isActive('reconocimiento.index'),
+                    svg: (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            <circle cx="12" cy="12" r="3" />
                         </svg>
                     ),
                 },

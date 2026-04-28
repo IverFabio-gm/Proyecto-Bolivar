@@ -14,8 +14,8 @@ createInertiaApp({
         console.log("Cargando:", name); 
 
         return resolvePageComponent(
-            `./Pages/${name}.jsx`,
-            import.meta.glob('./Pages/**/*.jsx'),
+            `./pages/${name}.jsx`,
+            import.meta.glob('./pages/**/*.jsx'),
         );
     },
 

@@ -22,3 +22,15 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Python virtual environment
+venv/
+env/
+ENV/
+.venv/
+.virtualenv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
